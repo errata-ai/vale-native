@@ -8,6 +8,9 @@
 *.so
 *.dylib
 
+bin/
+sh.vale.native.json
+
 # Test binary, built with `go test -c`
 *.test
 
