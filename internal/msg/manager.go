@@ -44,8 +44,8 @@ func (m *MsgManager) Read() (*Message, error) {
 }
 
 // Write writes a response to the browser.
-func (m *MsgManager) Write(value string) error {
-	return m.encoder.Encode(Response{Data: value})
+func (m *MsgManager) Write(value, cmd string) error {
+	return m.encoder.Encode(Response{Data: value, Command: cmd})
 }
 
 // Run runs the MsgManager.
@@ -64,26 +64,26 @@ func (m *MsgManager) Run() error {
 			if err != nil {
 				return err
 			}
-			m.Write(result)
+			m.Write(result, "lint")
 		case "version":
 			result, err := m.binMgr.Version()
 			if err != nil {
 				return err
 			}
-			m.Write(result)
+			m.Write(result, "version")
 		case "ls-config":
 			result, err := m.binMgr.Config()
 			if err != nil {
 				return err
 			}
-			m.Write(result)
+			m.Write(result, "ls-config")
 		default:
 			msg := fmt.Sprintf("unknown command: '%s'", msg.Command)
 			v, err := NewEncodedValeError(msg)
 			if err != nil {
 				return err
 			}
-			m.Write(v)
+			m.Write(v, "error")
 		}
 	}
 }

@@ -16,6 +16,8 @@ type Message struct {
 // Response is a struct that represents a response to a message received from
 // the browser.
 type Response struct {
+	// The command that was run locally.
+	Command string `json:"command"`
 	// The JSON-formatted output from Vale.
 	Data string `json:"data"`
 }
