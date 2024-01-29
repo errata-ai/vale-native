@@ -22,3 +22,5 @@ sh.vale.native.json
 
 # Go workspace file
 go.work
+
+dist/
