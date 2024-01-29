@@ -18,8 +18,10 @@ type Message struct {
 type Response struct {
 	// The command that was run locally.
 	Command string `json:"command"`
+	// The content from a webpage's `textarea` or `contenteditable` element.
+	Input string `json:"input"`
 	// The JSON-formatted output from Vale.
-	Data string `json:"data"`
+	Output string `json:"output"`
 }
 
 // ValeError is a struct that represents a single error from Vale.
