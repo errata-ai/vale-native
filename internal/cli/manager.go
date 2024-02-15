@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 )
@@ -21,8 +20,8 @@ func NewValeManager(path string) (*ValeManager, error) {
 }
 
 // Run lints the given text using Vale using the default configuration.
-func (v *ValeManager) Lint(text, ext string) (string, error) {
-	name := fmt.Sprintf("vale.*%s", ext)
+func (v *ValeManager) Lint(text, url, ext string) (string, error) {
+	name := "*" + url + ext
 
 	tmp, err := os.CreateTemp("", name)
 	if err != nil {

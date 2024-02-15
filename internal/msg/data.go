@@ -11,6 +11,8 @@ type Message struct {
 	// The markup language used by the webpage. For example, GitHub and Reddit
 	// use Markdown.
 	Format string `json:"format"`
+	// The URL of the webpage.
+	Url string `json:"url"`
 }
 
 // Response is a struct that represents a response to a message received from

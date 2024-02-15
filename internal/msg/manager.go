@@ -60,7 +60,7 @@ func (m *MsgManager) Run() error {
 
 		switch msg.Command {
 		case "lint":
-			result, err := m.binMgr.Lint(msg.Text, msg.Format)
+			result, err := m.binMgr.Lint(msg.Text, msg.Url, msg.Format)
 			if err != nil {
 				return err
 			}
