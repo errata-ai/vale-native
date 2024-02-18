@@ -62,21 +62,24 @@ func (m *MsgManager) Run() error {
 		case "lint":
 			result, err := m.binMgr.Lint(msg.Text, msg.Url, msg.Format)
 			if err != nil {
-				return err
+				log.Printf("Error [%s]: %s", msg.Command, err)
+			} else {
+				m.Write(msg.Text, result, "lint")
 			}
-			m.Write(msg.Text, result, "lint")
 		case "version":
 			result, err := m.binMgr.Version()
 			if err != nil {
-				return err
+				log.Printf("Error [%s]: %s", msg.Command, err)
+			} else {
+				m.Write("", result, "version")
 			}
-			m.Write("", result, "version")
 		case "ls-config":
 			result, err := m.binMgr.Config()
 			if err != nil {
-				return err
+				log.Printf("Error [%s]: %s", msg.Command, err)
+			} else {
+				m.Write("", result, "ls-config")
 			}
-			m.Write("", result, "ls-config")
 		default:
 			msg := fmt.Sprintf("unknown command: '%s'", msg.Command)
 			v, err := NewEncodedValeError(msg)
