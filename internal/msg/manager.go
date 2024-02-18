@@ -50,12 +50,12 @@ func (m *MsgManager) Write(in, out, cmd string) error {
 
 // WriteErr writes an error to the browser.
 func (m *MsgManager) WriteErr(cmd, msg string) error {
-	v, err := NewEncodedValeError(msg)
-	if err != nil {
+	parsed, err := ValeErrorFromJSON(msg)
+	if err == nil {
 		return err
 	}
-	log.Printf("Error [%s]: %s", cmd, msg)
-	return m.Write("", v, "error")
+	log.Printf("Error [%s]: %s", cmd, parsed.Text)
+	return m.Write("", msg, "error")
 }
 
 // Send formats and writes a message to the browser.
@@ -94,7 +94,13 @@ func (m *MsgManager) Run() error {
 			}
 		default:
 			msg := fmt.Sprintf("unknown command: '%s'", msg.Command)
-			if err := m.WriteErr("default", msg); err != nil {
+
+			v, err := NewEncodedValeError(msg)
+			if err != nil {
+				return err
+			}
+
+			if err := m.WriteErr("default", v); err != nil {
 				return err
 			}
 		}

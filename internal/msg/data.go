@@ -50,3 +50,13 @@ func NewEncodedValeError(text string) (string, error) {
 
 	return string(encoded), nil
 }
+
+// ValeErrorFromJSON creates a ValeError from its JSON-encoded representation.
+func ValeErrorFromJSON(data string) (ValeError, error) {
+	var v ValeError
+	err := json.Unmarshal([]byte(data), &v)
+	if err != nil {
+		return ValeError{}, err
+	}
+	return v, nil
+}
