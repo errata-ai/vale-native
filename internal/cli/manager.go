@@ -52,7 +52,7 @@ func (v *ValeManager) run(args []string) (string, error) {
 
 	result, err := cmd.CombinedOutput()
 	if err != nil {
-		return "", err
+		return string(result), err
 	}
 
 	return string(result), nil

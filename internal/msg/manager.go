@@ -48,6 +48,24 @@ func (m *MsgManager) Write(in, out, cmd string) error {
 	return m.encoder.Encode(Response{Input: in, Output: out, Command: cmd})
 }
 
+// WriteErr writes an error to the browser.
+func (m *MsgManager) WriteErr(cmd, msg string) error {
+	v, err := NewEncodedValeError(msg)
+	if err != nil {
+		return err
+	}
+	log.Printf("Error [%s]: %s", cmd, msg)
+	return m.Write("", v, "error")
+}
+
+// Send formats and writes a message to the browser.
+func (m *MsgManager) Send(msg *Message, retVal string, retErr error) error {
+	if retErr != nil {
+		return m.WriteErr(msg.Command, retVal)
+	}
+	return m.Write(msg.Text, retVal, msg.Command)
+}
+
 // Run runs the MsgManager.
 func (m *MsgManager) Run() error {
 	for {
@@ -60,33 +78,25 @@ func (m *MsgManager) Run() error {
 
 		switch msg.Command {
 		case "lint":
-			result, err := m.binMgr.Lint(msg.Text, msg.Url, msg.Format)
-			if err != nil {
-				log.Printf("Error [%s]: %s", msg.Command, err)
-			} else {
-				m.Write(msg.Text, result, "lint")
+			retVal, retErr := m.binMgr.Lint(msg.Text, msg.Url, msg.Format)
+			if err := m.Send(msg, retVal, retErr); err != nil {
+				return err
 			}
 		case "version":
-			result, err := m.binMgr.Version()
-			if err != nil {
-				log.Printf("Error [%s]: %s", msg.Command, err)
-			} else {
-				m.Write("", result, "version")
+			retVal, retErr := m.binMgr.Version()
+			if err := m.Send(msg, retVal, retErr); err != nil {
+				return err
 			}
 		case "ls-config":
-			result, err := m.binMgr.Config()
-			if err != nil {
-				log.Printf("Error [%s]: %s", msg.Command, err)
-			} else {
-				m.Write("", result, "ls-config")
+			retVal, retErr := m.binMgr.Config()
+			if err := m.Send(msg, retVal, retErr); err != nil {
+				return err
 			}
 		default:
 			msg := fmt.Sprintf("unknown command: '%s'", msg.Command)
-			v, err := NewEncodedValeError(msg)
-			if err != nil {
+			if err := m.WriteErr("default", msg); err != nil {
 				return err
 			}
-			m.Write("", v, "error")
 		}
 	}
 }
