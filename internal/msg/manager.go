@@ -51,7 +51,7 @@ func (m *MsgManager) Write(in, out, cmd string) error {
 // WriteErr writes an error to the browser.
 func (m *MsgManager) WriteErr(cmd, msg string) error {
 	parsed, err := ValeErrorFromJSON(msg)
-	if err == nil {
+	if err != nil {
 		return err
 	}
 	log.Printf("Error [%s]: %s", cmd, parsed.Text)
